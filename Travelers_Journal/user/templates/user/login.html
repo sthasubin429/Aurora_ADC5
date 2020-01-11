@@ -8,7 +8,7 @@
 
         <fieldset>
             {{ form|crispy }}
-            <legend>Sign Up now !!</legend>
+            <legend>Sign In now !!</legend>
         </fieldset>
 
         <div class="form-group">
@@ -17,7 +17,7 @@
 
         <div class="form-group">
             <p class="text-muted">
-                Already have an account!! <a class="ml-3 text-decoration-none" href="{% url 'login' %}"> Sign In</a>
+                Don't have an account!! <a class="ml-3 text-decoration-none" href="{% url 'register' %}"> Sign Up</a>
             </p>
         </div>
     </form>
