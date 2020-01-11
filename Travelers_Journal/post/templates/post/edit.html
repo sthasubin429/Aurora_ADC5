@@ -1,0 +1,22 @@
+{% extends "post/base.html" %}
+
+{% block content %}
+<h1>Edit</h1>
+<div class="container">
+    <form method="POST">
+        {% csrf_token %}
+    
+        <label for="title">Title</label>
+        <input type="text" name="title" value="{{posts.post_title}}"> <br>
+        <label for="content">Content</label>
+        <br>
+        <textarea rows="10" cols="50" name="content"> {{posts.post_content}} </textarea>
+        <br>
+        <button type="submit"> Update </button>
+    </form>
+
+    <p class="card-text"><small class="text-muted">Last updated on {{posts.post_date}}</small></p>
+    <button class="bg-danger text-decoration-none"><a href="/post/delete/{{posts.id}}">Delete</a></button>
+</div>
+
+{% endblock %}
