@@ -3,11 +3,25 @@ from .models import Posts
 import datetime
 from .forms import PostForm
 from django.http import HttpResponse
+from django.contrib.auth import get_user_model as user_data
 
 
 # Create your views here.
-
+def search(request, key):
+    #key = key.strip(" !@#$%^&*()-_+={}[]|\:;'<>?,./\"")
+    if key[0] == '@':
+        key = key[1:]
+        print(key)
+    elif key == '' or not Posts.objects.filter(post_title__contains=key):
+        return HttpResponse('Page Not Found123')
+    else:
+        return render(request, 'post/index.html', {'posts': Posts.objects.filter(post_title__contains=key)})
+        
 def homePage(request):
+    if request.method == "POST":
+        if request.POST['searchKey'] == '':
+            return HttpResponse('Page Not Found')
+        return search(request, request.POST['searchKey'])
     return render(request, 'post/index.html', context={'posts': Posts.objects.all})
 
 

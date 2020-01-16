@@ -6,7 +6,7 @@ app_name = 'post'
 
 urlpatterns = [
     path('', homePage),
-    path('create/', create),
+    path('create/', create, name="create"),
     path('view/<int:ID>', viewPost),
     path('edit/<int:ID>', editPostUpdateForm),
     path('delete/<int:ID>', postDelete),

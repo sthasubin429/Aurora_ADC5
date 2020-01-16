@@ -5,6 +5,12 @@
     <h3>Nav</h3>
     <a href="create">Create</a>
     
+    <form method="POST"> 
+        {% csrf_token %}
+        <input type="search" name="searchKey">
+        <button type="submit"> Search</button>
+    </form>
+
     {% for p in posts %}
     <div class="container">
         <div class="row">
