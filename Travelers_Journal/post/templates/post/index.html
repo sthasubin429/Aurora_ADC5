@@ -5,9 +5,9 @@
     <h3>Nav</h3>
     <a href="create">Create</a>
     
-    <form method="POST"> 
+    <form method="GET"> 
         {% csrf_token %}
-        <input type="search" name="searchKey">
+        <input type="text" name="searchKey">
         <button type="submit"> Search</button>
     </form>
 

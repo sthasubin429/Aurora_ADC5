@@ -1,43 +1,43 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from .models import Posts
 import datetime
 from .forms import PostForm
 from django.http import HttpResponse
 from django.contrib.auth import get_user_model as user_data
-
+from django.db.models import Q
 
 # Create your views here.
-def search(request, key):
-    #key = key.strip(" !@#$%^&*()-_+={}[]|\:;'<>?,./\"")
-    if key[0] == '@':
-        key = key[1:]
-        print(key)
-    elif key == '' or not Posts.objects.filter(post_title__contains=key):
-        return HttpResponse('Page Not Found123')
-    else:
-        return render(request, 'post/index.html', {'posts': Posts.objects.filter(post_title__contains=key)})
+def search(query=None):
+    queryset = []
+    queries = query.split(" ")
+    for q in queries:
+        posts = Posts.objects.filter(
+            Q(post_title__icontains=q) |
+            Q(post_content__icontains=q)
+        )
+
+        for post in posts:
+            queryset.append(post)
+
+    return list(set(queryset))
         
 def homePage(request):
-    if request.method == "POST":
-        if request.POST['searchKey'] == '':
-            return HttpResponse('Page Not Found')
-        return search(request, request.POST['searchKey'])
-    return render(request, 'post/index.html', context={'posts': Posts.objects.all})
+    post = Posts.objects.all()
+    query = ""
+    if request.GET:
+        query = request.GET['searchKey']
+    post = search(str(query))
+    return render(request, 'post/index.html', context={'posts': post})
 
 
 def create(request):
-    if request.method == "POST":
-        form = PostForm(request.POST)
-        title = request.POST['title']
-        content = request.POST['content']
-        image = request.POST['image']
-        date = datetime.datetime.now()
-        post = Posts(post_title=title, post_content=content,
-                        post_images=image, post_date=date)
-        post.save()
-        print("post Saved")
-        return render(request, 'post/index.html', context={'posts': Posts.objects.all})
     form = PostForm()
+    if request.method == "POST":
+        form = PostForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            print('form Saved')
+            return redirect('post:homepage')
     return render(request, 'post/create.html', {'form': form})
 
 
@@ -65,6 +65,6 @@ def editPostUpdateForm(request, ID):
 
 
 def postDelete(request,ID):
-    delPost = Posts.objects.filter(id=ID)
+    delPost = Posts.objects.get(id=ID)
     delPost.delete()
     return HttpResponse("Post Deleted!! <br> <a href='/post'> Return to View</a>")

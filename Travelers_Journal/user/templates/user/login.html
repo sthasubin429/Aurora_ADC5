@@ -1,5 +1,4 @@
 {% extends "user/base.html" %}
-{% load crispy_forms_tags%}
 {% block content %}
 
 <div class="container">
@@ -7,8 +6,10 @@
         {% csrf_token %}
 
         <fieldset>
-            {{ form|crispy }}
-            <legend>Sign In now !!</legend>
+            <label for="username">Username</label>
+            <input type="text" placeholder="Username" name="username">
+            <label for="password">Password</label>
+            <input type="password" placeholder="Password" name="password">
         </fieldset>
 
         <div class="form-group">
@@ -17,7 +18,7 @@
 
         <div class="form-group">
             <p class="text-muted">
-                Don't have an account!! <a class="ml-3 text-decoration-none" href="{% url 'register' %}"> Sign Up</a>
+                Don't have an account!! <a class="ml-3 text-decoration-none" href="/register"> Sign Up</a>
             </p>
         </div>
     </form>

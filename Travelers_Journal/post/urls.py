@@ -5,7 +5,7 @@ from .views import *
 app_name = 'post'
 
 urlpatterns = [
-    path('', homePage),
+    path('', homePage, name='homepage'),
     path('create/', create, name="create"),
     path('view/<int:ID>', viewPost),
     path('edit/<int:ID>', editPostUpdateForm),
