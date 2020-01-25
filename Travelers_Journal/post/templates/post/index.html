@@ -1,13 +1,9 @@
-{% extends "post/base.html" %}
+{% extends "base.html" %}
 
-{% block content %}
-    <h1>home</h1>
-    <h3>Nav</h3>
-    <a href="create">Create</a>
-    
+{% block content %} 
     <form method="GET"> 
         {% csrf_token %}
-        <input type="text" name="searchKey">
+        <input type="text" name="searchKey" placeholder="Search">
         <button type="submit"> Search</button>
     </form>
 
@@ -16,15 +12,18 @@
         <div class="row">
             <div class="col-sm-4">
                 <div class="card mb-3" style="max-width: 540px;">
-                        <img src="https://images.unsplash.com/photo-1577998076239-ea6d9a7dcd82?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80" class="card-img" alt="...">
-    
+                        <img src="{{ p.post_images.url }}" class="card-img" alt="...">
                 </div>
             </div>
             <div class="col-sm-8">
                 <div class="card-body">
                     <h5 class="card-title">{{p.post_title}}</h5>
-                    <p class="card-text">{{p.post_content}}</p>
-                    <p class="card-text"><small class="text-muted">{{p.post_date}}</small></p>
+                    <p class="card-text overflow-hidden" style="max-height: 300px;">{{p.post_content}}</p>
+                    <p class="card-text">
+                        <small class="text-muted">{{p.post_date}}</small>
+                        <small class="text-muted float-right">By: {{p.username}}</small>
+                    </p>
+
                     <a href="/post/view/{{p.id}}" class="card-link">View More</a>
                     <a href="/post/edit/{{p.id}}" class="card-link">Edit</a>
                 </div>

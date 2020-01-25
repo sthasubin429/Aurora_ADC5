@@ -1,12 +1,11 @@
-{% extends "post/base.html" %}
-
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
 {% block content %}
     <h1>Create</h1>
     <h3>Nav</h3>
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form }}
-
+        {{ form|crispy }}
         <button type="submit"> Upload </button>
     </form>
 {% endblock %}

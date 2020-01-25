@@ -1,4 +1,4 @@
-{% extends "post/base.html" %}
+{% extends "base.html" %}
 
 {% block content %}
 <h1>view</h1>
@@ -7,13 +7,17 @@
     <div class="card-body">
         <h5 class="card-title">{{posts.post_title}}</h5>
         <p class="card-text">{{posts.post_content}}</p>
-        <p class="card-text"><small class="text-muted">Last updated on {{posts.post_date}}</small></p>
+        <p class="card-text">
+            <small class="text-muted">{{posts.post_date}}</small>
+            <small class="text-muted float-right">By: {{posts.username}}</small>
+        </p>
+        {% if user.is_authenticated %}
         <a href="/post/edit/{{posts.id}}" class="card-link">Edit</a>
+        {% endif %}
     </div>
     <div class="card mb-3  mx-auto" style="max-width: 720px;">
-        <img src="https://images.unsplash.com/photo-1577998076239-ea6d9a7dcd82?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"
+        <img src="{{ posts.post_images.url }}"
             class="card-img rounded d-block" alt="...">
-    
     </div>
 </div>
 

@@ -3,14 +3,17 @@ from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 
+# Create your views here.s
 
-# Create your views here.
-
+#post that renders base template
+#this function redirets to the page where user can view all the post
 def base(request):
-    print(request.user)
-    return render(request, 'user/base.html')
+    return redirect('/post')
 
+'''
+View function that registers any new user
 
+'''
 def register(request):
     if request.method == 'POST':
         print(request.method)
@@ -31,6 +34,10 @@ def register(request):
         return render(request, 'user/register.html')
 
 
+'''
+View function that logs in already exesting user
+
+'''
 def signin(request):
     if request.method == 'POST':
         print(request.method)
@@ -45,11 +52,12 @@ def signin(request):
 
     return render(request, 'user/login.html')
 
-
+#view funstion to signout and kill the curent session
 def signout(request):
     logout(request)
     return render(request, 'user/logout.html')
 
+#view funstion that shows the current user profile
 def profile(request):
     if request.user.is_authenticated:
         return render(request, 'user/profile.html')
