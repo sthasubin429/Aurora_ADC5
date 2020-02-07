@@ -1,11 +1,13 @@
 from django.shortcuts import render,redirect,get_object_or_404
-from .models import Posts
+from .models import Posts, React, Follow
 import datetime
 from .forms import PostForm
 from django.http import HttpResponse
 from django.contrib.auth import get_user_model as user_data
 from django.db.models import Q
+from django.db.models import Avg
 
+from math import ceil
 # Create your views here.
 
 
@@ -23,18 +25,22 @@ def search(query=None):
             queryset.append(post)
 
     return list(set(queryset))
-
+def base(request):
+    return redirect('/post/5/1')
 '''
 View function that renders the main post page.this function initialy queries the database and returns all the posts stored in the database
 if the user is searches a post, it quereies tha database and returns only the post matched with the search querry
 '''
-def homePage(request):
-    post = Posts.objects.all()
+def homePage(request,SIZE,PAGENO):
+    skip = SIZE * (PAGENO - 1)
+    post = Posts.objects.all().order_by('-post_date')[skip: (PAGENO * SIZE)]
+    noOfPages = int(ceil(Posts.objects.all().count()/SIZE))
     query = ""
     if request.GET:
         query = request.GET['searchKey']
-    post = search(str(query))
-    return render(request, 'post/index.html', context={'posts': post})
+        post = search(str(query))
+        return render(request, 'post/index.html', {'posts': post})
+    return render(request, 'post/index.html', {'posts': post, 'noOfPages': range(1,noOfPages+1)})
 
 '''
 View function for creating a new fucntion.
@@ -52,7 +58,7 @@ def create(request):
         if form.is_valid():
             form.save()
             print('form Saved')
-            return redirect('post:homepage')
+            return redirect('/')
     elif request.user.is_authenticated:
         return render(request, 'post/create.html', {'form': form})
     else:
@@ -65,11 +71,29 @@ Simple view function to display any particular post.
 This function users slug to determine which post the user asked to display and only displays the post asked by the user.
 '''
 def viewPost(request, ID):
-    postObj = Posts.objects.get(id=ID)  
-    context_varible = {
-        'posts': postObj
-    }
-    return render(request, 'post/view.html', context_varible)
+    postObj = Posts.objects.get(id=ID)
+    ratingObj = React.objects.filter(post_id=ID).aggregate((Avg('rating')))
+    commentObj = React.objects.filter(post_id=ID)
+    ratingObj = round(ratingObj['rating__avg'],2)
+    print(ratingObj)
+    if request.method == 'POST' and request.user.is_authenticated:
+        get_rating = request.POST['rating']
+        get_comment = request.POST['comment']
+        react_obj = React(post_id=postObj, username=request.user,rating=get_rating, comment=get_comment, time=datetime.datetime.now())
+        react_obj.save()
+        return render(request, 'post/view.html', {'posts': postObj, 'rating': ratingObj, 'comments': commentObj})
+
+    elif not request.user.is_authenticated and request.method == 'POST':
+        return HttpResponse("Please Login <br> <a href='/post'> Return to View</a> <br> <a href='/login'> Login </a>")
+    return render(request, 'post/view.html', {'posts': postObj, 'rating': ratingObj, 'comments': commentObj})
+
+def followed(request, USER):
+    followObj = Follow.objects.filter(subscribed_by=USER)
+    userset = []
+    for f in followObj:
+        userset.append(f.subscribed_to)
+    postObj = Posts.objects.filter(username__in=userset)
+    return render(request, 'post/follow.html', {'posts':postObj})
 
 '''
 View funtion to edit any post.
@@ -80,6 +104,7 @@ Only allows the user to edit any post if the user sending the request to edit th
 def editPostUpdateForm(request, ID):
     inst = get_object_or_404(Posts, id=ID)
     form = PostForm(instance=inst)
+    form.instance.post_date = datetime.datetime.now()
     if request.method == "POST" and request.user == inst.username:
         form = PostForm(request.POST, request.FILES, instance=inst)
         if form.is_valid():

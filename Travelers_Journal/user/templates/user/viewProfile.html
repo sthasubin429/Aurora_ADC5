@@ -1,9 +1,19 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1>{{ user.username }}</h1>
-<h3>{{ user.email }}</h3>
-<h1>My Posts</h1>
+{% for user in posts|slice:":1" %}
+    <h1> Posts By: {{user.username}} </h1>
+{% endfor %}
+{% if follow %}
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit">Follow</button>
+    </form>
+    
+{% else %}
+    Subscribed
+{% endif %}
+
 {% for p in posts %}
 <div class="container">
     <div class="row">
@@ -28,18 +38,4 @@
     </div>
 </div>
 {% endfor %}
-<h1>Notifications</h1>
-{% for notify in notification %}
-    <h2> <a href="/profile/{{ notify.username_id }}">{{ notify.username }}</a> reacted to your post <a href="/post/view/{{ notify.post_id_id }}">{{ notify.post_id }}</a></h2> 
-    <br>
-{% endfor %}
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-
 {% endblock %}
-

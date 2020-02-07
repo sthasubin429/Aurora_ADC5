@@ -21,3 +21,21 @@ class Posts(models.Model):
 
     def __str__(self):
         return self.post_title
+
+class React(models.Model):
+    post_id = models.ForeignKey(Posts, on_delete=models.CASCADE)
+    username = models.ForeignKey(User, on_delete=models.CASCADE)
+    rating = models.IntegerField()
+    comment = models.TextField()
+    time = models.DateTimeField(default=datetime.datetime.now())
+
+    def __str__(self):
+        return str(self.username)
+
+
+class Follow(models.Model):
+    subscribed_to = models.ForeignKey(User, on_delete=models.CASCADE)
+    subscribed_by = models.TextField()
+    time = models.DateTimeField()
+    def __str__(self):
+        return str(self.subscribed_to)

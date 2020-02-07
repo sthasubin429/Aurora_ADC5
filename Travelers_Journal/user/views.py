@@ -2,9 +2,10 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from post.models import Posts, React, Follow
+import datetime
 
-# Create your views here.s
-
+# Create your views here
 #post that renders base template
 #this function redirets to the page where user can view all the post
 def base(request):
@@ -60,6 +61,38 @@ def signout(request):
 #view funstion that shows the current user profile
 def profile(request):
     if request.user.is_authenticated:
-        return render(request, 'user/profile.html')
+        postObj = Posts.objects.filter(username=request.user)
+        postList = []
+        for post in postObj:
+            postList.append(post.id)
+        print(postList)
+        notification = React.objects.filter(post_id__in=postList)
+        return render(request, 'user/profile.html', {'posts': postObj, 'notification':notification})
+    else:
+        return redirect('user:login')
+
+def viewProfile(request, USER):
+    if request.user.is_authenticated:
+        inst = Posts.objects.filter(username=USER)
+        if not inst:
+            return HttpResponse(status=404)
+        for i in inst:
+            inst = i
+            break
+        if request.user == inst.username:
+            return redirect('user:profile')
+        elif request.method == 'POST':
+            subscribed_by = request.user
+            subscribed_to = inst.username
+            follow_obj = Follow(subscribed_to=subscribed_to,subscribed_by=subscribed_by, time=datetime.datetime.now())
+            follow_obj.save()
+            return HttpResponse('SUBSCRIBED')
+        else:
+            follow = False
+            if not Follow.objects.filter(subscribed_by=request.user, subscribed_to=USER):
+                follow = True
+            postObj = Posts.objects.filter(username=USER).order_by('-post_date')
+
+            return render(request, 'user/viewProfile.html', {'posts': postObj, 'follow': follow})
     else:
         return redirect('user:login')

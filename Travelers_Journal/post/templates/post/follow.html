@@ -1,9 +1,6 @@
-{% extends 'base.html' %}
-{% block content %}
+{% extends "base.html" %}
 
-<h1>{{ user.username }}</h1>
-<h3>{{ user.email }}</h3>
-<h1>My Posts</h1>
+{% block content %}
 {% for p in posts %}
 <div class="container">
     <div class="row">
@@ -18,28 +15,15 @@
                 <p class="card-text overflow-hidden" style="max-height: 300px;">{{p.post_content}}</p>
                 <p class="card-text">
                     <small class="text-muted">{{p.post_date}}</small>
-                    <small class="text-muted float-right">By: {{p.username}}</small>
+                    <a href="/profile/{{p.username_id}}"><small class="text-muted float-right">By:
+                            {{p.username}}</small></a>
                 </p>
 
                 <a href="/post/view/{{p.id}}" class="card-link">View More</a>
-                <a href="/post/edit/{{p.id}}" class="card-link">Edit</a>
             </div>
         </div>
     </div>
 </div>
 {% endfor %}
-<h1>Notifications</h1>
-{% for notify in notification %}
-    <h2> <a href="/profile/{{ notify.username_id }}">{{ notify.username }}</a> reacted to your post <a href="/post/view/{{ notify.post_id_id }}">{{ notify.post_id }}</a></h2> 
-    <br>
-{% endfor %}
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-
+</div>
 {% endblock %}
-

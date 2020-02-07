@@ -4,8 +4,6 @@
 <div class="container">
     <form action="#" method="POST">
         {% csrf_token %}
-
-        <fieldset>
             <label for="username">Username</label>
             <input type="text" placeholder="Username" name="username">
             <label for="email">Email</label>
@@ -14,7 +12,6 @@
             <input type="password" placeholder="Password" name="password1">
             <label for="password2">Confirm Password</label>
             <input type="password" placeholder="Confirm Password" name="password2">
-        </fieldset>
 
         <div class="form-group">
             <button type="submit" class="btn btn-primary">Submit</button>

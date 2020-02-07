@@ -21,7 +21,7 @@
                     <p class="card-text overflow-hidden" style="max-height: 300px;">{{p.post_content}}</p>
                     <p class="card-text">
                         <small class="text-muted">{{p.post_date}}</small>
-                        <small class="text-muted float-right">By: {{p.username}}</small>
+                        <a href="/profile/{{p.username_id}}"><small class="text-muted float-right">By: {{p.username}}</small></a>
                     </p>
 
                     <a href="/post/view/{{p.id}}" class="card-link">View More</a>
@@ -30,6 +30,9 @@
             </div>
         </div>
     </div>
+    {% endfor %}
+    {% for i in noOfPages %}
+        <a href="/post/5/{{i}}"> {{i}}</a>
     {% endfor %}
     </div>
 {% endblock %}
