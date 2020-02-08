@@ -23,5 +23,8 @@ password: subin
 username: ishan
 password: ishan
 
-usrename: rajesh
-password: rajes
+username: rajesh
+password: rajesh
+
+username: api
+username: api

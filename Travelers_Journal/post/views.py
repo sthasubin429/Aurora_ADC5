@@ -6,7 +6,6 @@ from django.http import HttpResponse
 from django.contrib.auth import get_user_model as user_data
 from django.db.models import Q
 from django.db.models import Avg
-
 from math import ceil
 # Create your views here.
 
