@@ -74,8 +74,11 @@ def viewPost(request, ID):
     postObj = Posts.objects.get(id=ID)
     ratingObj = React.objects.filter(post_id=ID).aggregate((Avg('rating')))
     commentObj = React.objects.filter(post_id=ID)
-    ratingObj = round(ratingObj['rating__avg'],2)
     print(ratingObj)
+    if ratingObj['rating__avg'] is None:
+        ratingObj = 'None'
+    else:
+        ratingObj = round(ratingObj['rating__avg'],2)
     if request.method == 'POST' and request.user.is_authenticated:
         get_rating = request.POST['rating']
         get_comment = request.POST['comment']

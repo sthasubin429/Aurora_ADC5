@@ -65,7 +65,6 @@ def profile(request):
         postList = []
         for post in postObj:
             postList.append(post.id)
-        print(postList)
         notification = React.objects.filter(post_id__in=postList)
         return render(request, 'user/profile.html', {'posts': postObj, 'notification':notification})
     else:
@@ -92,7 +91,6 @@ def viewProfile(request, USER):
             if not Follow.objects.filter(subscribed_by=request.user, subscribed_to=USER):
                 follow = True
             postObj = Posts.objects.filter(username=USER).order_by('-post_date')
-
             return render(request, 'user/viewProfile.html', {'posts': postObj, 'follow': follow})
     else:
         return redirect('user:login')

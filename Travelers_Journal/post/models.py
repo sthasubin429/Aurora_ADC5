@@ -15,7 +15,7 @@ This has on_delete cascade as once the user deletes his or her profile all the p
 class Posts(models.Model):
     post_title = models.CharField(max_length=200)
     post_content = models.TextField()
-    post_images = models.ImageField(default='default.jpg', upload_to='post_images')
+    post_images = models.ImageField(default='post_images/default.jpg', upload_to='post_images')
     post_date = models.DateTimeField()
     username = models.ForeignKey(User, on_delete=models.CASCADE)
 
