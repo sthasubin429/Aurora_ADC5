@@ -7,6 +7,8 @@ from django.contrib.auth import get_user_model as user_data
 from django.db.models import Q
 from django.db.models import Avg
 from math import ceil
+from django.utils.datastructures import MultiValueDictKeyError
+
 # Create your views here.
 
 
@@ -79,12 +81,14 @@ def viewPost(request, ID):
     else:
         ratingObj = round(ratingObj['rating__avg'],2)
     if request.method == 'POST' and request.user.is_authenticated:
-        get_rating = request.POST['rating']
-        get_comment = request.POST['comment']
-        react_obj = React(post_id=postObj, username=request.user,rating=get_rating, comment=get_comment, time=datetime.datetime.now())
-        react_obj.save()
-        return render(request, 'post/view.html', {'posts': postObj, 'rating': ratingObj, 'comments': commentObj})
-
+        try:
+            get_rating = request.POST['rating']
+            get_comment = request.POST['comment']
+            react_obj = React(post_id=postObj, username=request.user,rating=get_rating, comment=get_comment, time=datetime.datetime.now())
+            react_obj.save()
+            return render(request, 'post/view.html', {'posts': postObj, 'rating': ratingObj, 'comments': commentObj})
+        except MultiValueDictKeyError:
+            return render(request, 'post/view.html', {'posts': postObj, 'rating': ratingObj, 'comments': commentObj})
     elif not request.user.is_authenticated and request.method == 'POST':
         return HttpResponse("Please Login <br> <a href='/post'> Return to View</a> <br> <a href='/login'> Login </a>")
     return render(request, 'post/view.html', {'posts': postObj, 'rating': ratingObj, 'comments': commentObj})
@@ -135,3 +139,4 @@ def postDelete(request, ID):
         return HttpResponse("You cannot delete this post as you are not the orginal creator of this post <br> <a href='/post'> Return to View</a>")
     else:
         return HttpResponse("Please Login <br> <a href='/post'> Return to View</a> <br> <a href='/login'> Login </a>")
+ 

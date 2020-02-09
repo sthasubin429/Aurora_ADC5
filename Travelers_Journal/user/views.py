@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from post.models import Posts, React, Follow
 import datetime
+from django.db import IntegrityError
 
 # Create your views here
 #post that renders base template
@@ -17,20 +18,25 @@ View function that registers any new user
 '''
 def register(request):
     if request.method == 'POST':
-        print(request.method)
-        username = request.POST['username']
-        password1 = request.POST['password1']
-        password2 = request.POST['password2']
-        email = request.POST['email']
-        if password1 == password2:
-            user = User.objects.create_user(
-                username=username, password=password1, email=email)
-            user.save()
-        user = authenticate(username=username, password=password1)
-        print(user)
-        if user is not None:
-            login(request, user)
-            return redirect('user:base')
+        try:
+            print(request.method)
+            username = request.POST['username']
+            password1 = request.POST['password1']
+            password2 = request.POST['password2']
+            email = request.POST['email']
+            if password1 == password2:
+                user = User.objects.create_user(
+                    username=username, password=password1, email=email)
+                user.save()
+            else:
+                return render(request, 'user/register.html')
+            user = authenticate(username=username, password=password1)
+            print(user)
+            if user is not None:
+                login(request, user)
+                return redirect('user:base')
+        except IntegrityError:
+            return render(request, 'user/register.html')
     else:
         return render(request, 'user/register.html')
 
@@ -85,7 +91,7 @@ def viewProfile(request, USER):
             subscribed_to = inst.username
             follow_obj = Follow(subscribed_to=subscribed_to,subscribed_by=subscribed_by, time=datetime.datetime.now())
             follow_obj.save()
-            return HttpResponse('SUBSCRIBED')
+            return render(request, 'user/subscribed.html')
         else:
             follow = False
             if not Follow.objects.filter(subscribed_by=request.user, subscribed_to=USER):
