@@ -8,11 +8,12 @@ from django.db.models import Q
 from django.db.models import Avg
 from math import ceil
 from django.utils.datastructures import MultiValueDictKeyError
+from django.contrib import messages
 
 # Create your views here.
 
 
-#Logic for view funciton
+'''Logic for view funciton'''
 def search(query=None):
     queryset = []
     queries = query.split(" ")
@@ -26,10 +27,17 @@ def search(query=None):
             queryset.append(post)
 
     return list(set(queryset))
+
+'''
+redirects request to dispay data by implemending pagination
+'''
 def base(request):
     return redirect('/post/5/1')
+
 '''
 View function that renders the main post page.this function initialy queries the database and returns all the posts stored in the database
+Data is returned in a paged format depending upon the size and page given.
+it also calculates the maximum number of page required to display all the post and html files only displays the appropriate number of pages
 if the user is searches a post, it quereies tha database and returns only the post matched with the search querry
 '''
 def homePage(request,SIZE,PAGENO):
@@ -58,18 +66,25 @@ def create(request):
         form.instance.post_date = datetime.datetime.now()
         if form.is_valid():
             form.save()
-            print('form Saved')
-            return redirect('/')
+            messages.success(request, 'Post Created!!')
+            return redirect('post:base')
+        else:
+            messages.warning(request, 'Post Data not valid')
+            return redirect('post:create')
     elif request.user.is_authenticated:
         return render(request, 'post/create.html', {'form': form})
     else:
-        return HttpResponse("Please Login <br> <a href='/post'> Return to View</a> <br> <a href='/login'> Login </a>")
+        messages.warning(request, 'Please Login to Continue')
+        return redirect('user:login')
 
 
 
 '''
 Simple view function to display any particular post.
 This function users slug to determine which post the user asked to display and only displays the post asked by the user.
+This view function also displays all the comments posted on this post and also dispays the average rating of the post.
+If the user submits blank rating and comment ir relods the same page by expecting multi value dictionary error
+Also if the user is not authenticated when submitting a rating and comment, it redirects to the login page.
 '''
 def viewPost(request, ID):
     postObj = Posts.objects.get(id=ID)
@@ -90,17 +105,25 @@ def viewPost(request, ID):
         except MultiValueDictKeyError:
             return render(request, 'post/view.html', {'posts': postObj, 'rating': ratingObj, 'comments': commentObj})
     elif not request.user.is_authenticated and request.method == 'POST':
-        return HttpResponse("Please Login <br> <a href='/post'> Return to View</a> <br> <a href='/login'> Login </a>")
+        messages.warning(request, 'Please Login to Continue')
+        return redirect('user:login')
     return render(request, 'post/view.html', {'posts': postObj, 'rating': ratingObj, 'comments': commentObj})
 
+'''
+This method opens a page that shows the post from the users that the logged in user has followed.
+If the user is not authenticated, it redirects to a login page with appropriate message
+'''
 def followed(request, USER):
-    followObj = Follow.objects.filter(subscribed_by=USER)
-    userset = []
-    for f in followObj:
-        userset.append(f.subscribed_to)
-    postObj = Posts.objects.filter(username__in=userset)
-    return render(request, 'post/follow.html', {'posts':postObj})
-
+    if request.user.is_authenticated:
+        followObj = Follow.objects.filter(subscribed_by=USER)
+        userset = []
+        for f in followObj:
+            userset.append(f.subscribed_to)
+        postObj = Posts.objects.filter(username__in=userset)
+        return render(request, 'post/follow.html', {'posts':postObj})
+    else:
+        messages.warning(request, 'Please Login to Continue')
+        return redirect('user:login')
 '''
 View funtion to edit any post.
 This function users slug to determine which post the user the user asked to edit and displays the post asked by the user.
@@ -115,13 +138,16 @@ def editPostUpdateForm(request, ID):
         form = PostForm(request.POST, request.FILES, instance=inst)
         if form.is_valid():
             form.save()
-            return HttpResponse("post updated <a href='/post'> Return to View</a>")
+            messages.success(request, 'Post Updated!!!')
+            return redirect(f'/post/view/{ID}')
     elif request.user == inst.username:
         return render(request, "post/edit.html", {"form": form, "posts": inst})
     elif request.user.is_authenticated:
-        return HttpResponse("You cannot edit this post as you are not the orginal creator of this post <br> <a href='/post'> Return to View</a>")
+        messages.warning(request, 'You cannot edit this post as You are not the orginal creator of this post!!')
+        return redirect(f'/post/view/{ID}')
     else:
-        return HttpResponse("Please Login <br> <a href='/post'> Return to View</a> <br> <a href='/login'> Login </a>")
+        messages.warning(request, 'Please Login to Continue')
+        return redirect('user:login')
 
 
 '''
@@ -134,9 +160,12 @@ def postDelete(request, ID):
     delPost = Posts.objects.get(id=ID)
     if request.user == delPost.username:
         delPost.delete()
-        return HttpResponse("Post Deleted!! <br> <a href='/post'> Return to View</a>")
+        messages.warning(request, 'Your Post has been Deleted!!')
+        return redirect('user:profile')
     elif request.user.is_authenticated:
-        return HttpResponse("You cannot delete this post as you are not the orginal creator of this post <br> <a href='/post'> Return to View</a>")
+        messages.warning(request, 'You cannot delete this post as you are not the orginal creator of this post!!')
+        return redirect(f'/post/view/{ID}')
     else:
-        return HttpResponse("Please Login <br> <a href='/post'> Return to View</a> <br> <a href='/login'> Login </a>")
+        messages.warning(request, 'Please Login to Continue')
+        return redirect('user:login')
  

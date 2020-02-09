@@ -5,13 +5,13 @@
     <form action="#" method="POST">
         {% csrf_token %}
             <label for="username">Username</label>
-            <input type="text" placeholder="Username" name="username">
+            <input type="text" placeholder="Username" name="username" required>
             <label for="email">Email</label>
-            <input type="email" placeholder="Email" name="email">
+            <input type="email" placeholder="Email" name="email" required>
             <label for="password1">Password</label>
-            <input type="password" placeholder="Password" name="password1">
+            <input type="password" placeholder="Password" name="password1" required>
             <label for="password2">Confirm Password</label>
-            <input type="password" placeholder="Confirm Password" name="password2">
+            <input type="password" placeholder="Confirm Password" name="password2" required>
 
         <div class="form-group">
             <button type="submit" class="btn btn-primary">Submit</button>

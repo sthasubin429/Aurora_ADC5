@@ -36,7 +36,9 @@ class OrmTest(TestCase):
         React.objects.create(id=104, post_id=P2, username=U3, rating=5, comment='Comment By U3 on P2')
         React.objects.create(id=105, post_id=P2, username=U1, rating=1, comment='Comment By U1 on P2')
 
-        
+    '''
+    Basisc ORM test of post class
+    '''    
     def testORM(self):
         testPostObj = Posts.objects.get(post_title="Test Title")
         testPostObj1 = Posts.objects.get(post_title="Test Title1")
@@ -44,7 +46,9 @@ class OrmTest(TestCase):
         self.assertEqual(testPostObj.post_title, "Test Title")
         self.assertIsNot(testPostObj.id, testPostObj1.id)
         self.assertIsNotNone(testPostObj)
-
+    '''
+    ORM test to check update
+    '''
     def test_update(self):
         testPostObj = Posts.objects.get(post_title="Test Title")
         testPostObj.post_title = "Updated Title"
@@ -52,12 +56,18 @@ class OrmTest(TestCase):
         testPostObj.save()
         self.assertEqual(testPostObj.post_title, "Updated Title")
         self.assertEqual(testPostObj.post_content, "Updated Content")
-
+    
+    '''
+    Test to check weather the username stored in the data base is same as the username who created the post
+    '''
     def test_user(self):
         user = User.objects.get(username__in=['travelersjournal'])
         testPostObj2 = Posts.objects.get(post_title="Test Title2")
         self.assertEqual(testPostObj2.username, user)
 
+    '''
+    Basic ORM test of React Class/Table
+    '''
     def test_react_basics(self):
         testReactObj = React.objects.get(id=101)
         testUserObj = User.objects.get(username__in=['user2'])
@@ -67,6 +77,11 @@ class OrmTest(TestCase):
         self.assertIsInstance(testReactObj, React)
         self.assertNotIsInstance(testReactObj, User)
 
+    '''
+    Test to check the ratings of he posts.
+    Gets average ratings and checks it
+    Checks if no rating is given to a post, its average is None data type and vice versa
+    '''
     def test_react_rating(self):
         testPostObj = Posts.objects.get(post_title="Test Title")
         testPostObj2 = Posts.objects.get(post_title="Test Title1")
@@ -84,6 +99,10 @@ class OrmTest(TestCase):
         self.assertIsNone(ratingObj3['rating__avg'])
         self.assertIsNotNone(ratingObj2['rating__avg'])
     
+    
+    '''
+    Checks the number of rating in a post.
+    '''
     def test_react_cont(self):
         testPostObj = Posts.objects.get(post_title="Test Title")
         testPostObj2 = Posts.objects.get(post_title="Test Title1")
@@ -96,5 +115,4 @@ class OrmTest(TestCase):
         self.assertEqual(ratingObj, 2)
         self.assertEqual(ratingObj2, 3)
         self.assertEqual(ratingObj3, 0)
-        
-        self.assertIsNotNone(ratingObj3, 0)
+        self.assertIsNotNone(ratingObj3)
