@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %} 
+    <form method="GET"> 
+        {% csrf_token %}
+        <input type="text" name="searchKey" placeholder="Search">
+        <button type="submit"> Search</button>
+    </form>
+
+    {% for p in posts %}
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="card mb-3" style="max-width: 540px;">
+                        <img src="{{ p.post_images.url }}" class="card-img" alt="...">
+                </div>
+            </div>
+            <div class="col-sm-8">
+                <div class="card-body">
+                    <h5 class="card-title">{{p.post_title}}</h5>
+                    <p class="card-text overflow-hidden" style="max-height: 300px;">{{p.post_content}}</p>
+                    <p class="card-text">
+                        <small class="text-muted">{{p.post_date}}</small>
+                        <a href="/profile/{{p.username_id}}"><small class="text-muted float-right">By: {{p.username}}</small></a>
+                    </p>
+
+                    <a href="/post/view/{{p.id}}" class="card-link">View More</a>
+                    <a href="/post/edit/{{p.id}}" class="card-link">Edit</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% for i in noOfPages %}
+        <a href="/post/5/{{i}}"> {{i}}</a>
+    {% endfor %}
+    </div>
+{% endblock %}
+

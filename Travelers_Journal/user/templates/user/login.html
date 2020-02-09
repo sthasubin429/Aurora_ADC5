@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container">
+    <form action="#" method="POST">
+        {% csrf_token %}
+
+        <fieldset>
+            <label for="username">Username</label>
+            <input type="text" placeholder="Username" name="username">
+            <label for="password">Password</label>
+            <input type="password" placeholder="Password" name="password">
+        </fieldset>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+
+        <div class="form-group">
+            <p class="text-muted">
+                Don't have an account!! <a class="ml-3 text-decoration-none" href="/register"> Sign Up</a>
+            </p>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

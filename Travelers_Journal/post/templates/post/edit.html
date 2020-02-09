@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<h1>Edit</h1>
+<div class="container">
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+           {{ form|crispy }} 
+        <div class="card mb-3  mx-auto" style="max-width: 720px;">
+            <img src="{{ posts.post_images.url }}" class="card-img rounded d-block" alt="...">
+        </div>
+        <button type="submit"> Upload </button>
+    </form>
+    <p><small class="text-muted">Last updated on {{posts.post_date}}</small></p>
+    <button class="bg-danger text-decoration-none"><a href="/post/delete/{{posts.id}}">Delete</a></button>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    
+</div>
+
+{% endblock %}
