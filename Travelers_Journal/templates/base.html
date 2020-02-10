@@ -54,10 +54,14 @@
             </div>
     </nav>
     {% if messages %}
-    {% for message in messages%}
-        <div class="alert alert-{{ message.tags}} text-center">{{ message }}</div>
+    {% for msg in messages %}
+        <div class="alert alert-{{ msg.tags}} text-center alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        {{msg.message}}
+        </div>
     {% endfor %}
     {% endif %}
+
     
     {% block content %}
 
