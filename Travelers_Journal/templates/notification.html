@@ -1,0 +1,6 @@
+<h4>Notifications</h4>
+{% for notify in notification %}
+<h2> <a href="/profile/{{ notify.username_id }}">{{ notify.username }}</a> reacted to your post <a
+        href="/post/view/{{ notify.post_id_id }}">{{ notify.post_id }}</a></h2>
+<br>
+{% endfor %}

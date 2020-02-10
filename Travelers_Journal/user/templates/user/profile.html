@@ -1,45 +1,87 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1>{{ user.username }}</h1>
-<h3>{{ user.email }}</h3>
-<h1>My Posts</h1>
-{% for p in posts %}
-<div class="container">
+<!-- content section -->
+<div class="container mb-4">
     <div class="row">
-        <div class="col-sm-4">
-            <div class="card mb-3" style="max-width: 540px;">
-                <img src="{{ p.post_images.url }}" class="card-img" alt="...">
-            </div>
-        </div>
-        <div class="col-sm-8">
-            <div class="card-body">
-                <h5 class="card-title">{{p.post_title}}</h5>
-                <p class="card-text overflow-hidden" style="max-height: 300px;">{{p.post_content}}</p>
-                <p class="card-text">
-                    <small class="text-muted">{{p.post_date}}</small>
-                    <small class="text-muted float-right">By: {{p.username}}</small>
-                </p>
+        {% if user.is_authenticated %}
+        <div class="col-sm-3">
+            <div class="user-identification d-flex flex-wrap align-items-center py-3 px-2 mb-4">
 
-                <a href="/post/view/{{p.id}}" class="card-link">View More</a>
-                <a href="/post/edit/{{p.id}}" class="card-link">Edit</a>
+                <div class="icon-letter">
+                    <strong>{{ userFLetter }}</strong>
+                </div>
+                <a class="nav-link" href="/profile">
+                    <h4 class="mb-0">
+                        {{ user.username|title }}
+                    </h4>
+                </a>
+
+                <strong class="text-muted d-block">{{ user.email|capfirst }}</strong>
+
             </div>
+
+            <div class="other-link py-3">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/post/followed/{{ user.username }}">Followed Post</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Latest Post</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Link</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Link</a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        {% else %}
+        <div class="col-sm-3">
+
+        </div>
+        {% endif %}
+        <div class="col-sm-7">
+            <h1>My Posts</h1>
+            {% for p in posts %}
+            <div class="post d-flex flex-wrap my-3">
+                <div class="col-11 col-lg-4 mx-auto">
+                    <div class="post-img mb-3">
+                        <img src="{{ p.post_images.url }}" class="card-img" alt="image">
+                    </div>
+                </div>
+                <div class="col-12 col-lg-8">
+                    <div class="card-body pt-0">
+                        <h5 class="card-title">{{p.post_title}}</h5>
+                        <p class="card-text box box--responsive text-justify">{{p.post_content}}</p>
+                        <p class="card-text">
+                            <small class="text-muted">{{p.post_date}}</small>
+                            <small class="text-muted float-right">By: {{p.username}}</small>
+                        </p>
+
+                        <a href="/post/view/{{p.id}}" class="card-link">View More</a>
+                        <a href="/post/edit/{{p.id}}" class="card-link">Edit</a>
+                    </div>
+                </div>
+            </div>
+
+            {% endfor %}
+        </div>
+
+        <div class="col-sm-2">
+            {% include 'notification.html' %}
+
+            {% for f in followObj %}
+                <a href="/profile/{{f.subscribed_to_id}}">{{f.subscribed_to}}</a>
+            {% endfor %}
+
+
         </div>
     </div>
 </div>
-{% endfor %}
-<h1>Notifications</h1>
-{% for notify in notification %}
-    <h2> <a href="/profile/{{ notify.username_id }}">{{ notify.username }}</a> reacted to your post <a href="/post/view/{{ notify.post_id_id }}">{{ notify.post_id }}</a></h2> 
-    <br>
-{% endfor %}
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
 
 {% endblock %}
-

@@ -33,15 +33,21 @@ View function that renders the main post page.this function initialy queries the
 if the user is searches a post, it quereies tha database and returns only the post matched with the search querry
 '''
 def homePage(request,SIZE,PAGENO):
+
     skip = SIZE * (PAGENO - 1)
     post = Posts.objects.all().order_by('-post_date')[skip: (PAGENO * SIZE)]
+    recentPost = Posts.objects.all().order_by('-post_date')[0:4]
     noOfPages = int(ceil(Posts.objects.all().count()/SIZE))
     query = ""
     if request.GET:
         query = request.GET['searchKey']
         post = search(str(query))
         return render(request, 'post/index.html', {'posts': post})
-    return render(request, 'post/index.html', {'posts': post, 'noOfPages': range(1,noOfPages+1)})
+    if request.user.is_authenticated:
+        followObj = Follow.objects.filter(subscribed_by=request.user.username)
+    else:
+        followObj = None
+    return render(request, 'post/index.html', {'posts': post, 'noOfPages': range(1,noOfPages+1), 'users':followObj, 'recentPost':recentPost})
 
 '''
 View function for creating a new fucntion.

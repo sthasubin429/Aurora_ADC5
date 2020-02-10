@@ -72,7 +72,9 @@ def profile(request):
         for post in postObj:
             postList.append(post.id)
         notification = React.objects.filter(post_id__in=postList)
-        return render(request, 'user/profile.html', {'posts': postObj, 'notification':notification})
+        followObj = Follow.objects.filter(subscribed_by=request.user.username)
+        userFirstLetter = str(request.user)[0].upper()
+        return render(request, 'user/profile.html', {'posts': postObj, 'notification':notification, 'followObj': followObj, 'userFLetter': userFirstLetter})
     else:
         return redirect('user:login')
 

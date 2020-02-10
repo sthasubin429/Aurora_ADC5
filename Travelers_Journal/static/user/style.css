@@ -1,0 +1,71 @@
+a {
+    text-decoration: none;
+    color: #000;
+}
+
+img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.main-nav {
+    box-shadow: 0 2px 5px rgba(0,0,0,.2);
+}
+
+.icon-letter {
+    height: 30px;
+    width: 30px;
+    border-radius: 25%;
+    background-color: #001fffb8;
+    color: #fff;  
+    text-align: center;
+}
+
+.icon-letter strong {
+    vertical-align: middle;
+}
+
+/* side section (Nav) */
+.other-link {
+    background: rgba(245, 249, 254, 0.58);
+    border-radius: 5px;
+}
+
+
+/* text ellipse */
+
+.box {
+    max-height: 300px;
+    overflow: hidden;
+  }
+  
+  .box--responsive {
+    width: 100%;
+  }
+  
+  .ellip {
+    display: block;
+    height: 100%;
+  }
+  .ellip-line {
+    display: inline-block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-wrap: normal;
+  }
+  .ellip,
+  .ellip-line {
+    position: relative;
+    overflow: hidden;
+    max-width: 100%;
+  }
+  
+/* post image */
+
+.post-img {
+    width: 100%;
+    border-radius: calc(.25rem - 1px);
+    overflow: hidden;
+    max-height: 180px;
+}

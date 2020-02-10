@@ -31,6 +31,16 @@
         </div>
     </div>
     {% endfor %}
+
+    {% for u in users %}
+    <a href="/profile/{{u.subscribed_to_id}}">{{u.subscribed_to}}</a>
+    {% endfor %}
+
+    {% for r in recentPost %}
+        <img src="{{ r.post_images.url }}" class="card-img" alt="...">
+        {{r.post_title}}
+    {% endfor %}
+    
     {% for i in noOfPages %}
         <a href="/post/5/{{i}}"> {{i}}</a>
     {% endfor %}
