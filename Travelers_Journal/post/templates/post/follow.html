@@ -1,29 +1,44 @@
 {% extends "base.html" %}
-
 {% block content %}
-{% for p in posts %}
 <div class="container">
     <div class="row">
-        <div class="col-sm-4">
-            <div class="card mb-3" style="max-width: 540px;">
-                <img src="{{ p.post_images.url }}" class="card-img" alt="...">
-            </div>
-        </div>
-        <div class="col-sm-8">
-            <div class="card-body">
-                <h5 class="card-title">{{p.post_title}}</h5>
-                <p class="card-text overflow-hidden" style="max-height: 300px;">{{p.post_content}}</p>
-                <p class="card-text">
-                    <small class="text-muted">{{p.post_date}}</small>
-                    <a href="/profile/{{p.username_id}}"><small class="text-muted float-right">By:
-                            {{p.username}}</small></a>
-                </p>
+        {% if user.is_authenticated %}
+        <div class="col-sm-3">
+            <div class="user-identification d-flex flex-wrap align-items-center py-3 px-2 mb-4">
 
-                <a href="/post/view/{{p.id}}" class="card-link">View More</a>
+                <div class="icon-letter">
+                    <strong>{{ userFLetter }}</strong>
+                </div>
+                <a class="nav-link" href="/profile">
+                    <h4 class="mb-0">
+                        {{ user.username|title }}
+                    </h4>
+                </a>
+
+                <strong class="text-muted d-block">{{ user.email|capfirst }}</strong>
             </div>
         </div>
+
+        {% else %}
+        <div class="col-sm-3">
+            {% include 'aboutUs.html' %}
+        </div>
+        {% endif %}
+
+        <div class="col-sm-7">
+            <h4 class="border-title pb-2 text-center mb-4s">Following Post</h4>
+            <div class="post">
+                {% include 'post.html' %}
+            </div>
+
+            {% for i in noOfPages %}
+            <a href="/post/5/{{i}}"> {{i}}</a>
+            {% endfor %}
+        </div>
+
+        <div class="col-sm-2">
+            {% include 'latestPost.html' %}
+        </div>
+        {% endblock %}
     </div>
 </div>
-{% endfor %}
-</div>
-{% endblock %}

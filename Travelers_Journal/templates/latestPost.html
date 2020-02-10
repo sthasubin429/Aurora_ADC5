@@ -1,0 +1,9 @@
+<div class="latest-post">
+    <h4 class="border-title pb-2">Latest Posts</h4>
+    {% for r in recentPost %}
+    <div class="singlePost mb-3">
+        <img src="{{ r.post_images.url }}" class="card-img" alt="image">
+        <a href="/post/view/{{ r.id }}">{{r.post_title}}</a>
+    </div>
+    {% endfor %}
+</div>

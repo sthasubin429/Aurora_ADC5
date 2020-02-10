@@ -1,26 +1,26 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-<h1>Edit</h1>
 <div class="container">
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-           {{ form|crispy }} 
-        <div class="card mb-3  mx-auto" style="max-width: 720px;">
-            <img src="{{ posts.post_images.url }}" class="card-img rounded d-block" alt="...">
+    <div class="row">
+        <div class="col-10 m-auto">
+            <h4 class="text-center border-title pb-2 mb-4">Edit Post</h4>
+
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <div class="card mb-3  mx-auto" style="max-width: 720px;">
+                    <img src="{{ posts.post_images.url }}" class="card-img rounded d-block" alt="...">
+                </div>
+                <div class="btn-grouping d-flex align-items-center justify-content-between">
+                    <button class="btn btn-primary" type="submit"> Update </button>
+                    <button class="btn btn-danger"><a class="text-white"
+                            href="/post/delete/{{posts.id}}">Delete</a></button>
+                </div>
+            </form>
+            <p><small class="text-muted">Last updated on {{posts.post_date}}</small></p>
         </div>
-        <button type="submit"> Upload </button>
-    </form>
-    <p><small class="text-muted">Last updated on {{posts.post_date}}</small></p>
-    <button class="bg-danger text-decoration-none"><a href="/post/delete/{{posts.id}}">Delete</a></button>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    
+    </div>
 </div>
 
 {% endblock %}

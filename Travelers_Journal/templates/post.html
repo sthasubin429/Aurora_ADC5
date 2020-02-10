@@ -1,0 +1,23 @@
+{% for p in posts %}
+<div class="post d-flex flex-wrap my-3">
+    <div class="col-11 col-lg-4 mx-auto">
+        <div class="post-img mb-3">
+            <img src="{{ p.post_images.url }}" class="card-img" alt="image">
+        </div>
+    </div>
+    <div class="col-12 col-lg-8">
+        <div class="card-body pt-0">
+            <h5 class="card-title"><a href="/post/view/{{ p.id }}">{{p.post_title}}</a></h5>
+            <p class="card-text box box--responsive text-justify">{{p.post_content}}</p>
+            <p class="card-text">
+                <small class="text-muted">{{p.post_date}}</small>
+                <small class="text-muted float-right clearfix"><a href="/profile/{{ p.username_id }}">By: {{p.username}}</a> </small>
+            </p>
+
+            <a href="/post/view/{{p.id}}" class="card-link">View More</a>
+            <a href="/post/edit/{{p.id}}" class="card-link">Edit</a>
+        </div>
+    </div>
+</div>
+
+{% endfor %}

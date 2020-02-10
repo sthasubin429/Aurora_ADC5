@@ -102,6 +102,7 @@ If already followed does not provide an option to follow again
 '''
 def viewProfile(request, USER):
     if request.user.is_authenticated:
+        recentPost = Posts.objects.all().order_by('-post_date')[0:4]
         inst = Posts.objects.filter(username=USER)
         if not inst:
             return HttpResponse(status=404)
@@ -122,7 +123,7 @@ def viewProfile(request, USER):
             if not Follow.objects.filter(subscribed_by=request.user, subscribed_to=USER):
                 follow = True
             postObj = Posts.objects.filter(username=USER).order_by('-post_date')
-            return render(request, 'user/viewProfile.html', {'posts': postObj, 'follow': follow})
+            return render(request, 'user/viewProfile.html', {'posts': postObj, 'follow': follow,'recentPost':recentPost})
     else:
         messages.warning(request, 'Please Login to Continue')
         return redirect('user:login')

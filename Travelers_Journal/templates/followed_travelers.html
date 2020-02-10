@@ -1,0 +1,14 @@
+<div class="followed_travelers pt-0 pb-3">
+    <h5 class="text-center border-title pb-2">Following</h5>
+    <div class="followed_users main-background">
+        <ul class="px-2 py-2">
+            {% for f in followObj %}
+            <li>
+                <a href="/profile/{{f.subscribed_to_id}}">@{{f.subscribed_to}}</a>
+            </li>
+            {% endfor %}
+        </ul>
+
+    </div>
+
+</div>

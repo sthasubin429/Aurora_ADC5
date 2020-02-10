@@ -2,7 +2,7 @@
 {% block content %}
 
 <!-- content section -->
-<div class="container mb-4">
+<div class="container">
     <div class="row">
         {% if user.is_authenticated %}
         <div class="col-sm-3">
@@ -21,23 +21,15 @@
 
             </div>
 
-            <div class="other-link py-3">
+            <div class="other-link main-background py-3 mb-4">
                 <ul class="nav flex-column">
                     <li class="nav-item">
                         <a class="nav-link" href="/post/followed/{{ user.username }}">Followed Post</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Latest Post</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Link</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Link</a>
-                    </li>
                 </ul>
             </div>
 
+            {% include 'notification.html' %}
         </div>
 
         {% else %}
@@ -45,41 +37,15 @@
 
         </div>
         {% endif %}
+
         <div class="col-sm-7">
-            <h1>My Posts</h1>
-            {% for p in posts %}
-            <div class="post d-flex flex-wrap my-3">
-                <div class="col-11 col-lg-4 mx-auto">
-                    <div class="post-img mb-3">
-                        <img src="{{ p.post_images.url }}" class="card-img" alt="image">
-                    </div>
-                </div>
-                <div class="col-12 col-lg-8">
-                    <div class="card-body pt-0">
-                        <h5 class="card-title">{{p.post_title}}</h5>
-                        <p class="card-text box box--responsive text-justify">{{p.post_content}}</p>
-                        <p class="card-text">
-                            <small class="text-muted">{{p.post_date}}</small>
-                            <small class="text-muted float-right">By: {{p.username}}</small>
-                        </p>
+            <h4 class="border-title text-center pb-2"> Posts</h4>
 
-                        <a href="/post/view/{{p.id}}" class="card-link">View More</a>
-                        <a href="/post/edit/{{p.id}}" class="card-link">Edit</a>
-                    </div>
-                </div>
-            </div>
-
-            {% endfor %}
+            {% include 'post.html' %}
         </div>
 
         <div class="col-sm-2">
-            {% include 'notification.html' %}
-
-            {% for f in followObj %}
-                <a href="/profile/{{f.subscribed_to_id}}">{{f.subscribed_to}}</a>
-            {% endfor %}
-
-
+            {% include 'followed_travelers.html' %}
         </div>
     </div>
 </div>

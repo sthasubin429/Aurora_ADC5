@@ -1,49 +1,71 @@
 {% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        {% if user.is_authenticated %}
+        <div class="col-sm-3">
+            <div class="user-identification d-flex flex-wrap align-items-center py-3 px-2 mb-4">
 
-{% block content %} 
-    <form method="GET"> 
-        {% csrf_token %}
-        <input type="text" name="searchKey" placeholder="Search">
-        <button type="submit"> Search</button>
-    </form>
-
-    {% for p in posts %}
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-4">
-                <div class="card mb-3" style="max-width: 540px;">
-                        <img src="{{ p.post_images.url }}" class="card-img" alt="...">
+                <div class="icon-letter">
+                    <strong>{{ userFLetter }}</strong>
                 </div>
-            </div>
-            <div class="col-sm-8">
-                <div class="card-body">
-                    <h5 class="card-title">{{p.post_title}}</h5>
-                    <p class="card-text overflow-hidden" style="max-height: 300px;">{{p.post_content}}</p>
-                    <p class="card-text">
-                        <small class="text-muted">{{p.post_date}}</small>
-                        <a href="/profile/{{p.username_id}}"><small class="text-muted float-right">By: {{p.username}}</small></a>
-                    </p>
+                <a class="nav-link" href="/profile">
+                    <h4 class="mb-0">
+                        {{ user.username|title }}
+                    </h4>
+                </a>
 
-                    <a href="/post/view/{{p.id}}" class="card-link">View More</a>
-                    <a href="/post/edit/{{p.id}}" class="card-link">Edit</a>
-                </div>
+                <strong class="text-muted d-block">{{ user.email|capfirst }}</strong>
+
             </div>
+
+            <div class="other-link main-background py-3 mb-4">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/post/followed/{{ user.username }}">Followed Post</a>
+                    </li>
+                </ul>
+            </div>
+
+            {% include 'notification.html' %}
         </div>
-    </div>
-    {% endfor %}
 
-    {% for u in users %}
-    <a href="/profile/{{u.subscribed_to_id}}">{{u.subscribed_to}}</a>
-    {% endfor %}
+        {% else %}
+        <div class="col-sm-3">
+            {% include 'aboutUs.html' %}
+        </div>
+        {% endif %}
 
-    {% for r in recentPost %}
-        <img src="{{ r.post_images.url }}" class="card-img" alt="...">
-        {{r.post_title}}
-    {% endfor %}
-    
-    {% for i in noOfPages %}
-        <a href="/post/5/{{i}}"> {{i}}</a>
-    {% endfor %}
-    </div>
-{% endblock %}
+        <div class="col-sm-7">
+            <div class="search">
+                <form class="form-inline flex-nowrap" method="GET">
+                    {% csrf_token %}
 
+                    <input class="form-control w-100 mr-sm-2" type="search" name="searchKey" placeholder="Search"
+                        aria-label="Search">
+                    <button class="btn btn-primary my-2 my-sm-0" type="submit">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                    </button>
+                </form>
+            </div>
+
+            <div class="post">
+                {% include 'post.html' %}
+            </div>
+
+            {% for i in noOfPages %}
+            <a href="/post/5/{{i}}"> {{i}}</a>
+            {% endfor %}
+        </div>
+
+        <div class="col-sm-2">
+            {% if user.is_authenticated %}
+                {% include 'followed_travelers.html' %}
+                {% include 'latestPost.html' %}
+            {% else %}    
+                {% include 'latestPost.html' %}
+            {% endif %}
+        </div>
+        {% endblock %}
+</div>
+</div>

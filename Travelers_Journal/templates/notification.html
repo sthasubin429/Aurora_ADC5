@@ -1,6 +1,13 @@
-<h4>Notifications</h4>
-{% for notify in notification %}
-<h2> <a href="/profile/{{ notify.username_id }}">{{ notify.username }}</a> reacted to your post <a
-        href="/post/view/{{ notify.post_id_id }}">{{ notify.post_id }}</a></h2>
-<br>
-{% endfor %}
+<div class="notification main-background p-3">
+        <h5 class="border-title text-center pb-2">Notifications</h5>
+        {% for notify in notification %}
+        <div class="notify-block">
+                <h6>
+                        <a href="/profile/{{ notify.username_id }}">{{ notify.username }}</a>
+                        reacted to your post
+                        <a href="/post/view/{{ notify.post_id_id }}">{{ notify.post_id }}</a>
+                </h6>
+        </div>
+
+        {% endfor %}
+</div>

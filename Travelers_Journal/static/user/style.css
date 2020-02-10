@@ -1,6 +1,10 @@
 a {
-    text-decoration: none;
+    text-decoration: none !important;
     color: #000;
+}
+
+ul {
+  list-style: none;
 }
 
 img {
@@ -27,11 +31,10 @@ img {
 }
 
 /* side section (Nav) */
-.other-link {
-    background: rgba(245, 249, 254, 0.58);
-    border-radius: 5px;
+.main-background{
+  background: rgba(245, 249, 254, 0.58);
+  border-radius: 5px;
 }
-
 
 /* text ellipse */
 
@@ -43,7 +46,7 @@ img {
   .box--responsive {
     width: 100%;
   }
-  
+
   .ellip {
     display: block;
     height: 100%;
@@ -68,4 +71,31 @@ img {
     border-radius: calc(.25rem - 1px);
     overflow: hidden;
     max-height: 180px;
+}
+
+.border-title {
+  border-bottom: 1px solid rgba(0,0,0,.1);
+
+}
+
+.notification {
+  height: 400px;
+  overflow-y: scroll;
+}
+
+.notification a {
+  color: #007bff;
+} 
+
+.followed_users a{
+  font-size: 16px;
+}
+
+.singlePost a{
+  word-break: break-word;
+}
+
+.content {
+  border: 1px solid rgba(0,0,0,.1);
+  border-radius: 5px;
 }

@@ -46,6 +46,16 @@ def homePage(request,SIZE,PAGENO):
     post = Posts.objects.all().order_by('-post_date')[skip: (PAGENO * SIZE)]
     recentPost = Posts.objects.all().order_by('-post_date')[0:4]
     noOfPages = int(ceil(Posts.objects.all().count()/SIZE))
+    userFirstLetter = str(request.user)[0].upper()
+    if request.user.is_authenticated:
+        postObj = Posts.objects.filter(username=request.user)
+        postList = []
+        for p in postObj:
+            postList.append(p.id)
+        notification = React.objects.filter(post_id__in=postList)
+    else:
+        postObj = None
+        notification = None 
     query = ""
     if request.GET:
         query = request.GET['searchKey']
@@ -55,7 +65,7 @@ def homePage(request,SIZE,PAGENO):
         followObj = Follow.objects.filter(subscribed_by=request.user.username)
     else:
         followObj = None
-    return render(request, 'post/index.html', {'posts': post, 'noOfPages': range(1,noOfPages+1), 'users':followObj, 'recentPost':recentPost})
+    return render(request, 'post/index.html', {'posts': post, 'noOfPages': range(1,noOfPages+1), 'followObj':followObj, 'recentPost':recentPost, 'userFLetter':userFirstLetter,'notification':notification})
 
 '''
 View function for creating a new fucntion.
@@ -94,6 +104,7 @@ Also if the user is not authenticated when submitting a rating and comment, it r
 '''
 def viewPost(request, ID):
     postObj = Posts.objects.get(id=ID)
+    recentPost = Posts.objects.all().order_by('-post_date')[0:4]
     ratingObj = React.objects.filter(post_id=ID).aggregate((Avg('rating')))
     commentObj = React.objects.filter(post_id=ID)
     print(ratingObj)
@@ -107,13 +118,13 @@ def viewPost(request, ID):
             get_comment = request.POST['comment']
             react_obj = React(post_id=postObj, username=request.user,rating=get_rating, comment=get_comment, time=datetime.datetime.now())
             react_obj.save()
-            return render(request, 'post/view.html', {'posts': postObj, 'rating': ratingObj, 'comments': commentObj})
+            return render(request, 'post/view.html', {'posts': postObj, 'rating': ratingObj, 'comments': commentObj,'recentPost':recentPost})
         except MultiValueDictKeyError:
-            return render(request, 'post/view.html', {'posts': postObj, 'rating': ratingObj, 'comments': commentObj})
+            return render(request, 'post/view.html', {'posts': postObj, 'rating': ratingObj, 'comments': commentObj,'recentPost':recentPost})
     elif not request.user.is_authenticated and request.method == 'POST':
         messages.warning(request, 'Please Login to Continue')
         return redirect('user:login')
-    return render(request, 'post/view.html', {'posts': postObj, 'rating': ratingObj, 'comments': commentObj})
+    return render(request, 'post/view.html', {'posts': postObj, 'rating': ratingObj, 'comments': commentObj,'recentPost':recentPost})
 
 '''
 This method opens a page that shows the post from the users that the logged in user has followed.
@@ -122,11 +133,13 @@ If the user is not authenticated, it redirects to a login page with appropriate 
 def followed(request, USER):
     if request.user.is_authenticated:
         followObj = Follow.objects.filter(subscribed_by=USER)
+        userFirstLetter = str(request.user)[0].upper()
+        recentPost = Posts.objects.all().order_by('-post_date')[0:4]
         userset = []
         for f in followObj:
             userset.append(f.subscribed_to)
         postObj = Posts.objects.filter(username__in=userset)
-        return render(request, 'post/follow.html', {'posts':postObj})
+        return render(request, 'post/follow.html', {'posts':postObj,'recentPost': recentPost,'userFLetter':userFirstLetter})
     else:
         messages.warning(request, 'Please Login to Continue')
         return redirect('user:login')
