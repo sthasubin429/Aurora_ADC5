@@ -12,3 +12,8 @@ urlpatterns = [
     path('posts/update/<int:ID>', views.update_api, name='update_api'),
     path('posts/delete/<int:ID>', views.delete_api, name='delete_api'),
 ]
+
+'''
+Api's URL pattern uses slug to process the request made through api
+
+'''

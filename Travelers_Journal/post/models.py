@@ -21,6 +21,12 @@ class Posts(models.Model):
 
     def __str__(self):
         return self.post_title
+'''
+This is a data base to store all the ratings given to post and comments along with the post and comments along with the time the comments were done
+Table as one to many relation with post table as one post can have multiple reactions but one reaction is associated with only one post.
+Table also has one to many relation with user table as one user can make multiple reaction but only one user for any given reaction
+This has on delete cascade as if user or post is deleted all the reaction associated with this is also deleted
+'''
 
 class React(models.Model):
     post_id = models.ForeignKey(Posts, on_delete=models.CASCADE)
@@ -32,7 +38,9 @@ class React(models.Model):
     def __str__(self):
         return str(self.username)
 
-
+'''
+This table is to keep track of the other users that any given user follows.
+'''
 class Follow(models.Model):
     subscribed_to = models.ForeignKey(User, on_delete=models.CASCADE)
     subscribed_by = models.TextField()
