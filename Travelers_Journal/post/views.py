@@ -38,6 +38,7 @@ def base(request):
 View function that renders the main post page.this function initialy queries the database and returns all the posts stored in the database
 Data is returned in a paged format depending upon the size and page given.
 it also calculates the maximum number of page required to display all the post and html files only displays the appropriate number of pages
+Dynamically increases the number of pages as the number of posts increases
 if the user is searches a post, it quereies tha database and returns only the post matched with the search querry
 '''
 def homePage(request,SIZE,PAGENO):
@@ -47,6 +48,10 @@ def homePage(request,SIZE,PAGENO):
     recentPost = Posts.objects.all().order_by('-post_date')[0:4]
     noOfPages = int(ceil(Posts.objects.all().count()/SIZE))
     userFirstLetter = str(request.user)[0].upper()
+    if request.user.is_authenticated:
+        followObj = Follow.objects.filter(subscribed_by=request.user.username)
+    else:
+        followObj = None
     if request.user.is_authenticated:
         postObj = Posts.objects.filter(username=request.user)
         postList = []
@@ -60,11 +65,7 @@ def homePage(request,SIZE,PAGENO):
     if request.GET:
         query = request.GET['searchKey']
         post = search(str(query))
-        return render(request, 'post/index.html', {'posts': post})
-    if request.user.is_authenticated:
-        followObj = Follow.objects.filter(subscribed_by=request.user.username)
-    else:
-        followObj = None
+        return render(request, 'post/index.html', {'posts': post, 'followObj': followObj, 'recentPost': recentPost, 'userFLetter': userFirstLetter, 'notification': notification})
     return render(request, 'post/index.html', {'posts': post, 'noOfPages': range(1,noOfPages+1), 'followObj':followObj, 'recentPost':recentPost, 'userFLetter':userFirstLetter,'notification':notification})
 
 '''
@@ -118,6 +119,8 @@ def viewPost(request, ID):
             get_comment = request.POST['comment']
             react_obj = React(post_id=postObj, username=request.user,rating=get_rating, comment=get_comment, time=datetime.datetime.now())
             react_obj.save()
+            ratingObj = React.objects.filter(post_id=ID).aggregate((Avg('rating')))
+            ratingObj = round(ratingObj['rating__avg'], 2)
             return render(request, 'post/view.html', {'posts': postObj, 'rating': ratingObj, 'comments': commentObj,'recentPost':recentPost})
         except MultiValueDictKeyError:
             return render(request, 'post/view.html', {'posts': postObj, 'rating': ratingObj, 'comments': commentObj,'recentPost':recentPost})

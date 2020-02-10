@@ -3,7 +3,7 @@
 <div class="container">
     <div class="row">
         {% if user.is_authenticated %}
-        <div class="col-sm-3">
+        <div class="col-lg-3 col-md-4">
             <div class="user-identification d-flex flex-wrap align-items-center py-3 px-2 mb-4">
 
                 <div class="icon-letter">
@@ -20,12 +20,12 @@
         </div>
 
         {% else %}
-        <div class="col-sm-3">
+        <div class="col-lg-3 col-md-4">
             {% include 'aboutUs.html' %}
         </div>
         {% endif %}
 
-        <div class="col-sm-7">
+        <div class="col-lg-7 col-md-8">
             <h4 class="border-title pb-2 text-center mb-4s">Following Post</h4>
             <div class="post">
                 {% include 'post.html' %}
@@ -35,8 +35,7 @@
             <a href="/post/5/{{i}}"> {{i}}</a>
             {% endfor %}
         </div>
-
-        <div class="col-sm-2">
+        <div class="col-lg-2 col-md-7 mx-auto">
             {% include 'latestPost.html' %}
         </div>
         {% endblock %}

@@ -1,22 +1,22 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container">
+<div class="container mb-3">
     <div class="row">
         {% if user.is_authenticated %}
-        <div class="col-sm-3">
-            <div class="user-identification d-flex flex-wrap align-items-center py-3 px-2 mb-4">
-
-                <div class="icon-letter">
-                    <strong>{{ userFLetter }}</strong>
+        <div class="col-lg-3 col-md-4">
+            <div class="user-identification py-3 px-2 mb-4">
+                <div class="username  d-flex flex-wrap align-items-center ">
+                    <div class="icon-letter">
+                        <strong>{{ userFLetter }}</strong>
+                    </div>
+                    <a class="nav-link" href="/profile">
+                        <h4 class="mb-0">
+                            {{ user.username|title }}
+                        </h4>
+                    </a>
                 </div>
-                <a class="nav-link" href="/profile">
-                    <h4 class="mb-0">
-                        {{ user.username|title }}
-                    </h4>
-                </a>
-
                 <strong class="text-muted d-block">{{ user.email|capfirst }}</strong>
-
+            
             </div>
 
             <div class="other-link main-background py-3 mb-4">
@@ -31,12 +31,12 @@
         </div>
 
         {% else %}
-        <div class="col-sm-3">
+        <div class="col-lg-3 col-md-4">
             {% include 'aboutUs.html' %}
         </div>
         {% endif %}
 
-        <div class="col-sm-7">
+        <div class="col-lg-7 col-md-8">
             <div class="search">
                 <form class="form-inline flex-nowrap" method="GET">
                     {% csrf_token %}
@@ -52,13 +52,14 @@
             <div class="post">
                 {% include 'post.html' %}
             </div>
-
-            {% for i in noOfPages %}
-            <a href="/post/5/{{i}}"> {{i}}</a>
-            {% endfor %}
+            <div class="pagination justify-content-center">
+                {% for i in noOfPages %}
+                    <a href="/post/5/{{i}}"><button type="button" class="btn btn-primary" style="margin: 5px;">{{i}}</button>
+                {% endfor %}
+            </div>     
         </div>
 
-        <div class="col-sm-2">
+        <div class="col-lg-2 col-md-7 mx-auto">
             {% if user.is_authenticated %}
                 {% include 'followed_travelers.html' %}
                 {% include 'latestPost.html' %}

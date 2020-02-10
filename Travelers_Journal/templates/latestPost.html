@@ -3,7 +3,7 @@
     {% for r in recentPost %}
     <div class="singlePost mb-3">
         <img src="{{ r.post_images.url }}" class="card-img" alt="image">
-        <a href="/post/view/{{ r.id }}">{{r.post_title}}</a>
+        <a href="/post/view/{{ r.id }}" class="font-weight-normal">{{r.post_title}}</a>
     </div>
     {% endfor %}
 </div>
