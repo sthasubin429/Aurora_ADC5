@@ -64,16 +64,16 @@ Returns a suscessfull message after post is sucessfully created in json format
 def create_api(request):
     if request.method == 'GET':
         return redirect('post:create')
-    decoded_data = request.body.decode('utf-8')
-    post_data = json.loads(decoded_data)
-    title = post_data['title']
-    content = post_data['content']
-    username = [post_data['username']]
-    user = User.objects.get(username__in=username)
-    print(user)
-    post = Posts(post_title=title, post_content=content, post_date=datetime.datetime.now(), username=user)
-    post.save()
-    return JsonResponse({"message": "Post Sucessfully Created!!!"})
+    if request.method == 'POST':
+        decoded_data = request.body.decode('utf-8')
+        post_data = json.loads(decoded_data)
+        title = post_data['title']
+        content = post_data['content']
+        username = [post_data['username']]
+        user = User.objects.get(username__in=username)
+        post = Posts(post_title=title, post_content=content, post_date=datetime.datetime.now(), username=user)
+        post.save()
+        return JsonResponse({"message": "Post Sucessfully Created!!!"})
 
 '''
 This view fuction is to update post stored in database.
@@ -88,13 +88,14 @@ def update_api(request, ID):
     post = Posts.objects.get(id=ID)
     if request.method == 'GET':
         return JsonResponse({"post_title": post.post_title, "post_content": post.post_content})
-    decoded_data = request.body.decode('utf-8')
-    post_data = json.loads(decoded_data)
-    post.post_title = post_data['title']
-    post.post_content = post_data['content']
-    post_date = datetime.datetime.now()
-    post.save()
-    return JsonResponse({"message": "Successfully updated!!"})
+    if request.method == 'POST':
+        decoded_data = request.body.decode('utf-8')
+        post_data = json.loads(decoded_data)
+        post.post_title = post_data['title']
+        post.post_content = post_data['content']
+        post_date = datetime.datetime.now()
+        post.save()
+        return JsonResponse({"message": "Successfully updated!!"})
 
 '''
 This view function used to delete the post stored in data base.
@@ -103,6 +104,7 @@ Delets the post associated with the id and returns a message after the post has 
 '''
 @csrf_exempt 
 def delete_api(request, ID):
-    post = Posts.objects.get(id=ID)
-    post.delete()
-    return JsonResponse({"message": "Post Deleted"})
+    if request.method == 'DELETE':
+        post = Posts.objects.get(id=ID)
+        post.delete()
+        return JsonResponse({"message": "Post Deleted"})
